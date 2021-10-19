@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class playerController : MonoBehaviour
 {
@@ -14,11 +15,19 @@ public class playerController : MonoBehaviour
     //interacting with object
     public GameObject interactable;
     public GameObject waterObject;
+    public GameObject fertileObject;
+    public GameObject depositObject;
 
     public float water = 100;
+    public float money = 0;
 
     public float[] cropsharvested;
-    public GameObject[] seeds;
+    public float[] cropPrices;
+    public float[] seeds;
+
+    public Text waterAmount;
+    public Text moneyAmount;
+    public Text CornAmount;
 
 
     // Start is called before the first frame update
@@ -26,6 +35,9 @@ public class playerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
+        waterAmount.text = "Water: 10";
+        CornAmount.text = "0";
+        moneyAmount.text = "Money: $0";
     }
 
     // Update is called once per frame
@@ -38,7 +50,7 @@ public class playerController : MonoBehaviour
 
 
         Interactions();
-        
+        CornAmount.text = cropsharvested[0].ToString();
     }
 
     private void FixedUpdate()
@@ -65,6 +77,12 @@ public class playerController : MonoBehaviour
         }else if (col.gameObject.tag == "Water")
         {
             waterObject = col.gameObject;
+        }else if (col.gameObject.tag == "Fertile ground")
+        {
+            fertileObject = col.gameObject;
+        }else if (col.gameObject.tag == "Deposit")
+        {
+            depositObject = col.gameObject;
         }
     }
 
@@ -77,6 +95,13 @@ public class playerController : MonoBehaviour
         }else if (col.gameObject.tag == "Water")
         {
             waterObject = null;
+        }
+        else if (col.gameObject.tag == "Fertile ground")
+        {
+            fertileObject = null;
+        }else if (col.gameObject.tag == "Deposit")
+        {
+            depositObject = null;
         }
     }
 
@@ -92,6 +117,7 @@ public class playerController : MonoBehaviour
                 if (Input.GetKeyDown("f") && water > 0)
                 {
                     water--;
+                    waterAmount.text = "Water: " + water;
                     interactable.GetComponent<cropScript>().isSick = false;
                 }
             }
@@ -108,6 +134,10 @@ public class playerController : MonoBehaviour
                         case "Corn":
                             cropsharvested[0] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
                             Destroy(interactable);
+                            if(cropsharvested[0] > 75)
+                            {
+                                cropsharvested[0] = 75;
+                            }
                             interactable = null;
                             break;
                         default:
@@ -127,6 +157,33 @@ public class playerController : MonoBehaviour
                 {
                     water = 10;
                 }
+                waterAmount.text = "Water: " + water;
+            }
+        }
+
+        if (fertileObject != null)
+        {   
+            //add check for seeds
+            if (Input.GetKeyDown("f"))
+            {
+                fertileObject.GetComponent<FertileGround>().planetd = true;
+            }
+        }
+
+        if (depositObject != null)
+        {
+            //add check for seeds
+            if (Input.GetKeyDown("f"))
+            {
+                int i = 0;
+                while(i < cropsharvested.Length)
+                {
+                    money += (cropsharvested[i] * cropPrices[i]);
+                    cropsharvested[i] = 0;
+                    i++;
+                }
+
+                moneyAmount.text = "Money: $" + money;
             }
         }
     }
