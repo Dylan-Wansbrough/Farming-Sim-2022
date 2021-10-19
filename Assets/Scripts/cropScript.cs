@@ -3,7 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class cropScript : MonoBehaviour
-{   
+{
+    private SpriteRenderer m_SpriteRenderer;
+
+    public string cropName;
+    public int harvestMin;
+    public int harvestMax;
+
 
     //stages
     public int currentStage = 0;
@@ -21,28 +27,43 @@ public class cropScript : MonoBehaviour
     public bool stage3;
     public bool stage4;
 
+    public Sprite[] sprites;
+    public Color[] colours;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         stageChanges();
-        Debug.Log("Sick: " + isSick);
+        if (isSick)
+        {
+            m_SpriteRenderer.color = colours[1];
+        }
+        else
+        {
+            m_SpriteRenderer.color = colours[0];
+        }
     }
 
 
     void stageChanges()
     {
-        currentStageTime += Time.deltaTime;
+        if (!isGrown)
+        {
+            currentStageTime += Time.deltaTime;
+        }
 
         if (currentStageTime < stageTime)
         {
             //stage 1 seed
             Debug.Log("Stage 1 Seed");
+            m_SpriteRenderer.sprite = sprites[0];
         }
         else if (currentStageTime < (stageTime * 2))
         {
@@ -57,6 +78,7 @@ public class cropScript : MonoBehaviour
                     isSick = true;
                 }
                 stage2 = true;
+                m_SpriteRenderer.sprite = sprites[1];
             }
             
         }
@@ -72,6 +94,7 @@ public class cropScript : MonoBehaviour
                         isSick = true;
                     }
                     stage3 = true;
+                    m_SpriteRenderer.sprite = sprites[2];
                 }
                 else
                 {
@@ -94,6 +117,7 @@ public class cropScript : MonoBehaviour
                         isSick = true;
                     }
                     stage4 = true;
+                    m_SpriteRenderer.sprite = sprites[3];
                 }
                 else
                 {
@@ -110,6 +134,7 @@ public class cropScript : MonoBehaviour
             {
                 Destroy(gameObject);
             }
+            m_SpriteRenderer.sprite = sprites[4];
             isGrown = true;
             //stage 5 seed
             Debug.Log("Stage 5 Seed");
