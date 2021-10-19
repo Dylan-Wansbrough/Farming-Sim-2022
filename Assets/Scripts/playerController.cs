@@ -25,9 +25,12 @@ public class playerController : MonoBehaviour
     public float[] cropPrices;
     public float[] seeds;
 
+    public int CurrentSeed;
+
     public Text waterAmount;
     public Text moneyAmount;
     public Text CornAmount;
+    public Text PotatoeAmount;
 
 
     // Start is called before the first frame update
@@ -51,6 +54,16 @@ public class playerController : MonoBehaviour
 
         Interactions();
         CornAmount.text = cropsharvested[0].ToString();
+        PotatoeAmount.text = cropsharvested[1].ToString();
+
+        if (Input.GetKeyDown("q"))
+        {
+            CurrentSeed++;
+            if(CurrentSeed > seeds.Length - 1)
+            {
+                CurrentSeed = 0;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -140,6 +153,15 @@ public class playerController : MonoBehaviour
                             }
                             interactable = null;
                             break;
+                        case "Potatoe":
+                            cropsharvested[1] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
+                            Destroy(interactable);
+                            if (cropsharvested[1] > 75)
+                            {
+                                cropsharvested[1] = 75;
+                            }
+                            interactable = null;
+                            break;
                         default:
                             Debug.Log("Incorrect crop");
                             break;
@@ -167,6 +189,7 @@ public class playerController : MonoBehaviour
             if (Input.GetKeyDown("f"))
             {
                 fertileObject.GetComponent<FertileGround>().planetd = true;
+                fertileObject.GetComponent<FertileGround>().SeedNum = CurrentSeed;
             }
         }
 

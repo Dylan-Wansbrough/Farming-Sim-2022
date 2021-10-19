@@ -14,6 +14,8 @@ public class FertileGround : MonoBehaviour
 
     public BoxCollider2D collidy;
 
+    public int SeedNum;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +31,7 @@ public class FertileGround : MonoBehaviour
         {
             if (!SpawnOnce)
             {
-                currentlyPlanted = Instantiate(crops[0], new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.2f, gameObject.transform.position.z), Quaternion.identity);
+                currentlyPlanted = Instantiate(crops[SeedNum], new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.2f, gameObject.transform.position.z), Quaternion.identity);
                 float m_ScaleX = 0.0f;
                 float m_ScaleY = 0.0f;
                 collidy.size = new Vector2(m_ScaleX, m_ScaleY);
