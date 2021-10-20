@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cropName: Corn
   harvestMin: 2
-  harvestMax: 10
+  harvestMax: 8
   currentStage: 0
   stageTime: 10
   isSick: 0
