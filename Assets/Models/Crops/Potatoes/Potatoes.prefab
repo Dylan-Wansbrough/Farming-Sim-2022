@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7fc7e2098d3aa146a7467265b5e7c92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cropName: Potatoe
+  cropName: Potato
   harvestMin: 3
   harvestMax: 7
   currentStage: 0

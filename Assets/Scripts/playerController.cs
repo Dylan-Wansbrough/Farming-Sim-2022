@@ -17,6 +17,9 @@ public class playerController : MonoBehaviour
     public GameObject waterObject;
     public GameObject fertileObject;
     public GameObject depositObject;
+    public GameObject vendingObject;
+
+    public GameObject vendingTextbox;
 
     public float water = 100;
     public float money = 0;
@@ -32,6 +35,9 @@ public class playerController : MonoBehaviour
     public Text CornAmount;
     public Text PotatoeAmount;
 
+    public Text currentSeedtext;
+    public Text currentSeedRemainingtext;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +47,8 @@ public class playerController : MonoBehaviour
         waterAmount.text = "Water: 10";
         CornAmount.text = "0";
         moneyAmount.text = "Money: $0";
+        currentSeedtext.text = "Current Seed: Corn Seed";
+        currentSeedRemainingtext.text =  "Corn Seed: " +  seeds[0];
     }
 
     // Update is called once per frame
@@ -64,6 +72,8 @@ public class playerController : MonoBehaviour
                 CurrentSeed = 0;
             }
         }
+
+        seedNames();
     }
 
     private void FixedUpdate()
@@ -96,6 +106,10 @@ public class playerController : MonoBehaviour
         }else if (col.gameObject.tag == "Deposit")
         {
             depositObject = col.gameObject;
+        }else if (col.gameObject.tag == "Vending Machine")
+        {
+            vendingObject = col.gameObject;
+            vendingTextbox.SetActive(true);
         }
     }
 
@@ -115,6 +129,11 @@ public class playerController : MonoBehaviour
         }else if (col.gameObject.tag == "Deposit")
         {
             depositObject = null;
+        }
+        else if (col.gameObject.tag == "Vending Machine")
+        {
+            vendingObject = null;
+            vendingTextbox.SetActive(false);
         }
     }
 
@@ -153,7 +172,7 @@ public class playerController : MonoBehaviour
                             }
                             interactable = null;
                             break;
-                        case "Potatoe":
+                        case "Potato":
                             cropsharvested[1] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
                             Destroy(interactable);
                             if (cropsharvested[1] > 75)
@@ -188,8 +207,17 @@ public class playerController : MonoBehaviour
             //add check for seeds
             if (Input.GetKeyDown("f"))
             {
-                fertileObject.GetComponent<FertileGround>().planetd = true;
-                fertileObject.GetComponent<FertileGround>().SeedNum = CurrentSeed;
+                if(seeds[CurrentSeed] > 0)
+                {
+                    fertileObject.GetComponent<FertileGround>().planetd = true;
+                    fertileObject.GetComponent<FertileGround>().SeedNum = CurrentSeed;
+                    fertileObject = null;
+                    seeds[CurrentSeed]--;
+                }
+                else
+                {
+                    Debug.Log("No seeds");
+                }
             }
         }
 
@@ -208,6 +236,49 @@ public class playerController : MonoBehaviour
 
                 moneyAmount.text = "Money: $" + money;
             }
+        }
+
+        if (vendingObject != null)
+        {
+            //add check for seeds
+            if (Input.GetKeyDown("1"))
+            {
+                if(money >= 60)
+                {
+                    money -= 60;
+                    seeds[0] += 10;
+                }
+
+                moneyAmount.text = "Money: $" + money;
+            }else if (Input.GetKeyDown("2"))
+            {
+                if (money >= 45)
+                {
+                    money -= 45;
+                    seeds[1] += 10;
+                }
+
+                moneyAmount.text = "Money: $" + money;
+            }
+        }
+    }
+
+    void seedNames()
+    {
+        switch (CurrentSeed)
+        {
+            case 0:
+                currentSeedtext.text = "Current Seed: Corn Seed";
+                currentSeedRemainingtext.text = "Corn Seeds: " + seeds[CurrentSeed];
+                break;
+            case 1:
+                currentSeedtext.text = "Current Seed: Potato Seed";
+                currentSeedRemainingtext.text = "Potato Seeds: " + seeds[CurrentSeed];
+                break;
+            default:
+                Debug.Log("Incorrect crop");
+                break;
+
         }
     }
 

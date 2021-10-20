@@ -8,6 +8,7 @@ TagManager:
   - Water
   - Fertile ground
   - Deposit
+  - Vending Machine
   layers:
   - Default
   - TransparentFX
