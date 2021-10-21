@@ -34,6 +34,7 @@ public class playerController : MonoBehaviour
     public Text moneyAmount;
     public Text CornAmount;
     public Text PotatoeAmount;
+    public Text CarrotAmount;
 
     public Text currentSeedtext;
     public Text currentSeedRemainingtext;
@@ -77,10 +78,15 @@ public class playerController : MonoBehaviour
         {
             controller.SetInteger("Direction", 1);
         }
+        else
+        {
+            controller.SetInteger("Direction", 0);
+        }
 
         Interactions();
         CornAmount.text = cropsharvested[0].ToString();
         PotatoeAmount.text = cropsharvested[1].ToString();
+        CarrotAmount.text = cropsharvested[2].ToString();
 
         if (Input.GetKeyDown("q"))
         {
@@ -169,6 +175,7 @@ public class playerController : MonoBehaviour
                     water--;
                     waterAmount.text = "Water: " + water;
                     interactable.GetComponent<cropScript>().isSick = false;
+                    controller.SetInteger("Direction", 5);
                 }
             }
 
@@ -199,6 +206,15 @@ public class playerController : MonoBehaviour
                             }
                             interactable = null;
                             break;
+                        case "Carrot":
+                            cropsharvested[2] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
+                            Destroy(interactable);
+                            if (cropsharvested[2] > 75)
+                            {
+                                cropsharvested[2] = 75;
+                            }
+                            interactable = null;
+                            break;
                         default:
                             Debug.Log("Incorrect crop");
                             break;
@@ -216,6 +232,7 @@ public class playerController : MonoBehaviour
                 {
                     water = 10;
                 }
+                controller.SetInteger("Direction", 5);
                 waterAmount.text = "Water: " + water;
             }
         }
@@ -277,6 +294,15 @@ public class playerController : MonoBehaviour
                 }
 
                 moneyAmount.text = "Money: $" + money;
+            }else if (Input.GetKeyDown("3"))
+            {
+                if (money >= 70)
+                {
+                    money -= 70;
+                    seeds[2] += 10;
+                }
+
+                moneyAmount.text = "Money: $" + money;
             }
         }
     }
@@ -292,6 +318,10 @@ public class playerController : MonoBehaviour
             case 1:
                 currentSeedtext.text = "Current Seed: Potato Seed";
                 currentSeedRemainingtext.text = "Potato Seeds: " + seeds[CurrentSeed];
+                break;
+            case 2:
+                currentSeedtext.text = "Current Seed: Carrot Seed";
+                currentSeedRemainingtext.text = "Carrot Seeds: " + seeds[CurrentSeed];
                 break;
             default:
                 Debug.Log("Incorrect crop");

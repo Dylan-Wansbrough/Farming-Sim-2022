@@ -42,8 +42,8 @@ public class FertileGround : MonoBehaviour
 
         if(currentlyPlanted == null)
         {
-            float m_ScaleX = 0.32f;
-            float m_ScaleY = 0.32f;
+            float m_ScaleX = 0.28f;
+            float m_ScaleY = 0.28f;
             collidy.size = new Vector2(m_ScaleX, m_ScaleY);
             planetd = false;
             SpawnOnce = false;
