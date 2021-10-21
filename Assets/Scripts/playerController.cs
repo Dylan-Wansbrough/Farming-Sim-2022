@@ -39,6 +39,8 @@ public class playerController : MonoBehaviour
     public Text currentSeedRemainingtext;
 
 
+    public Animator controller;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,6 +61,22 @@ public class playerController : MonoBehaviour
 
         moveVals = new Vector2(horizontal, vertical).normalized;
 
+
+        if(moveVals.x > 0)
+        {
+            controller.SetInteger("Direction", 4);
+        }else if (moveVals.x < 0)
+        {
+            controller.SetInteger("Direction", 2);
+        }
+        else if (moveVals.y > 0)
+        {
+            controller.SetInteger("Direction", 3);
+        }
+        else if (moveVals.y < 0)
+        {
+            controller.SetInteger("Direction", 1);
+        }
 
         Interactions();
         CornAmount.text = cropsharvested[0].ToString();
