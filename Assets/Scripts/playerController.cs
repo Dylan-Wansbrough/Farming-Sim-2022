@@ -43,6 +43,8 @@ public class playerController : MonoBehaviour
 
 
     public Animator controller;
+    public Animator duckController;
+    float timing;
     public AudioSource farmingSounds;
     public AudioClip[] farmClips;
 
@@ -102,6 +104,12 @@ public class playerController : MonoBehaviour
         }
 
         seedNames();
+
+        timing += Time.deltaTime;
+        if (timing > 40)
+        {
+            duckController.SetInteger("Time", 21);
+        }
     }
 
     private void FixedUpdate()
