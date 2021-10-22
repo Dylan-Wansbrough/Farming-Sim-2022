@@ -31,6 +31,8 @@ public class playerController : MonoBehaviour
     public int CurrentSeed;
 
     public Text waterAmount;
+    public float waterMax;
+    public GameObject upgrade;
     public Text moneyAmount;
     public Text CornAmount;
     public Text PotatoeAmount;
@@ -41,6 +43,8 @@ public class playerController : MonoBehaviour
 
 
     public Animator controller;
+    public AudioSource farmingSounds;
+    public AudioClip[] farmClips;
 
     // Start is called before the first frame update
     void Start()
@@ -172,6 +176,8 @@ public class playerController : MonoBehaviour
             {
                 if (Input.GetKeyDown("f") && water > 0)
                 {
+                    farmingSounds.clip = farmClips[1];
+                    farmingSounds.Play();
                     water--;
                     waterAmount.text = "Water: " + water;
                     interactable.GetComponent<cropScript>().isSick = false;
@@ -185,10 +191,13 @@ public class playerController : MonoBehaviour
             {
                 if (Input.GetKeyDown("f"))
                 {
+                    farmingSounds.clip = farmClips[0];
+                    farmingSounds.Play();
                     string nameCheck = interactable.GetComponent<cropScript>().cropName;
                     switch (nameCheck)
                     {
                         case "Corn":
+                            controller.SetInteger("Direction", 6);
                             cropsharvested[0] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
                             Destroy(interactable);
                             if(cropsharvested[0] > 75)
@@ -198,6 +207,7 @@ public class playerController : MonoBehaviour
                             interactable = null;
                             break;
                         case "Potato":
+                            controller.SetInteger("Direction", 6);
                             cropsharvested[1] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
                             Destroy(interactable);
                             if (cropsharvested[1] > 75)
@@ -207,6 +217,7 @@ public class playerController : MonoBehaviour
                             interactable = null;
                             break;
                         case "Carrot":
+                            controller.SetInteger("Direction", 6);
                             cropsharvested[2] += Random.Range(interactable.GetComponent<cropScript>().harvestMin, interactable.GetComponent<cropScript>().harvestMax);
                             Destroy(interactable);
                             if (cropsharvested[2] > 75)
@@ -227,10 +238,12 @@ public class playerController : MonoBehaviour
         {
             if (Input.GetKeyDown("f") && water < 10)
             {
+                farmingSounds.clip = farmClips[1];
+                farmingSounds.Play();
                 water += 10;
-                if(water > 10)
+                if(water > waterMax)
                 {
-                    water = 10;
+                    water = waterMax;
                 }
                 controller.SetInteger("Direction", 5);
                 waterAmount.text = "Water: " + water;
@@ -244,6 +257,8 @@ public class playerController : MonoBehaviour
             {
                 if(seeds[CurrentSeed] > 0)
                 {
+                    farmingSounds.clip = farmClips[2];
+                    farmingSounds.Play();
                     fertileObject.GetComponent<FertileGround>().planetd = true;
                     fertileObject.GetComponent<FertileGround>().SeedNum = CurrentSeed;
                     fertileObject = null;
@@ -269,7 +284,7 @@ public class playerController : MonoBehaviour
                     i++;
                 }
 
-                moneyAmount.text = "Money: $" + money;
+                moneyAmount.text = "Money: $" + ((Mathf.Round(money * 10)) / 10);
             }
         }
 
@@ -284,25 +299,37 @@ public class playerController : MonoBehaviour
                     seeds[0] += 10;
                 }
 
-                moneyAmount.text = "Money: $" + money;
-            }else if (Input.GetKeyDown("2"))
+                moneyAmount.text = "Money: $" + ((Mathf.Round(money * 10)) / 10);
+            }
+            else if (Input.GetKeyDown("2"))
             {
                 if (money >= 45)
                 {
                     money -= 45;
                     seeds[1] += 10;
                 }
-
-                moneyAmount.text = "Money: $" + money;
+                
+                moneyAmount.text = "Money: $" + ((Mathf.Round(money * 10))/10);
             }else if (Input.GetKeyDown("3"))
             {
-                if (money >= 70)
+                if (money >= 75)
                 {
-                    money -= 70;
+                    money -= 75;
                     seeds[2] += 10;
                 }
 
-                moneyAmount.text = "Money: $" + money;
+                moneyAmount.text = "Money: $" + ((Mathf.Round(money * 10)) / 10);
+            }
+            else if (Input.GetKeyDown("4") && upgrade.activeSelf)
+            {
+                if (money >= 250)
+                {
+                    upgrade.SetActive(false);
+                    money -= 250;
+                    waterMax += 10;
+                }
+
+                moneyAmount.text = "Money: $" + ((Mathf.Round(money * 10)) / 10);
             }
         }
     }
