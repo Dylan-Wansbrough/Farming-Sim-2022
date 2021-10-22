@@ -244,7 +244,7 @@ public class playerController : MonoBehaviour
 
         if(waterObject != null)
         {
-            if (Input.GetKeyDown("f") && water < 10)
+            if (Input.GetKeyDown("f") && water < waterMax)
             {
                 farmingSounds.clip = farmClips[1];
                 farmingSounds.Play();
